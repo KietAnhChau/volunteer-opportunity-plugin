@@ -12,7 +12,19 @@
 
 function plugin_activate()
 {
+   global $wpdb;
 
+   $wpdb->query("CREATE TABLE volunteer_opportunities (
+         id int AUTO_INCREMENT PRIMARY KEY,
+         position varchar(255),
+         organization varchar(255),
+         type varchar(50),
+         email varchar(255),
+         description text,
+         location varchar(255),
+         hours int,
+         skills_required text
+   );");
 }
 
 function plugin_deactivate()
@@ -23,7 +35,9 @@ function plugin_deactivate()
 
 function plugin_uninstall()
 {
+   global $wpdb;
 
+   $wpdb->query("DROP TABLE volunteer_opportunities");
 }
 
 
