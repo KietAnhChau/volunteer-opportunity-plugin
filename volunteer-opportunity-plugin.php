@@ -41,6 +41,20 @@ function plugin_uninstall()
 }
 
 
+function admin_page_html()
+{
+   ?>
+
+   <?php
+}
+
+function admin_page()
+{
+
+}
+
+// Add Admin Page
+add_action("admin_menu", "admin_page");
 
 
 // Register Custom Hooks
