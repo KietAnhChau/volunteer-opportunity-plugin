@@ -44,13 +44,38 @@ function plugin_uninstall()
 function admin_page_html()
 {
    ?>
-
+        <h2><?php echo esc_html(get_admin_page_title()) ?></h2>
    <?php
 }
 
+
+/**
+ * Adds a custom admin page to the WordPress dashboard.
+ *
+ * ref: https://developer.wordpress.org/reference/functions/add_menu_page/
+ * @return void
+ */
 function admin_page()
 {
+   /* add_menu_page( 
+      string $page_title, 
+      string $menu_title, 
+      string $capability, 
+      string $menu_slug, 
+      callable $callback = '', 
+      string $icon_url = '', 
+      int|float $position = null ): string
+   */
 
+   add_menu_page(
+      "Volunteer",
+      "Volunteer",
+      "manage_options",
+      "volunteer",
+      "admin_page_html",
+      "",
+      20
+  );
 }
 
 // Add Admin Page
