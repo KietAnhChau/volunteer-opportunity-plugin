@@ -29,7 +29,9 @@ function plugin_activate()
 
 function plugin_deactivate()
 {
+   global $wpdb;
 
+   $wpdb->query("TRUNCATE TABLE volunteer_opportunities");
 }
 
 
@@ -44,7 +46,10 @@ function plugin_uninstall()
 function admin_page_html()
 {
    ?>
-        <h2><?php echo esc_html(get_admin_page_title()) ?></h2>
+      <div class="wrap">
+         <h2><?php echo esc_html(get_admin_page_title()) ?></h2> 
+      </div>
+
    <?php
 }
 
@@ -77,6 +82,16 @@ function admin_page()
       20
   );
 }
+
+// Add Shortcode
+function shortcode($atts = [], $content = NULL)
+{
+
+}
+
+
+// Add Shortcode
+add_shortcode("add", "wporg_shortcode");
 
 // Add Admin Page
 add_action("admin_menu", "admin_page");
