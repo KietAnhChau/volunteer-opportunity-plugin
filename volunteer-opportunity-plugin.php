@@ -43,11 +43,42 @@ function plugin_uninstall()
 }
 
 
+/**
+ * Renders the HTML for the admin page to create a volunteer opportunity.
+ *
+ * ref: https://dotorgstyleguide.wordpress.com/
+ * @return void
+ */
 function admin_page_html()
 {
    ?>
       <div class="wrap">
          <h2><?php echo esc_html(get_admin_page_title()) ?></h2> 
+
+         <h3>Create Volunteer Opportunity</h3>
+         
+         <form method="post">
+            <table class="form-table">
+                  <tr>
+                     <th scope="row"><label for="title">Title</label></th>
+                     <td><input name="title" type="text" id="title" value="" class="regular-text" required></td>
+                  </tr>
+                  <tr>
+                     <th scope="row"><label for="description">Description</label></th>
+                     <td><textarea name="description" id="description" class="large-text" required></textarea></td>
+                  </tr>
+                  <tr>
+                     <th scope="row"><label for="type">Type</label></th>
+                     <td>
+                        <select name="type" id="type" required>
+
+                        </select>
+                     </td>
+                  </tr>
+            </table>
+
+         </form>
+
       </div>
 
    <?php
