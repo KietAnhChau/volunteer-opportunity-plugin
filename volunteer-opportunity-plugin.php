@@ -57,61 +57,28 @@ function admin_page_html()
 
    $opportunities = [
       (object)[
-          'id' => 1,
-          'title' => 'Community Clean-Up',
-          'description' => 'Help clean up the local park.',
-          'type' => 'One-time',
-          'organization' => 'Green Earth',
-          'email' => 'contact@greenearth.org',
-          'location' => 'Central Park',
-          'hours' => '4',
-          'skills_required' => 'None'
-      ],
+         'id' => 1,
+         'title' => 'Community Clean-Up',
+         'description' => 'Help clean up the local park.',
+         'type' => 'One-time',
+         'organization' => 'Green Earth',
+         'email' => 'contact@greenearth.org',
+         'location' => 'Central Park',
+         'hours' => '4',
+         'skills_required' => 'None'
+      ], 
       (object)[
-          'id' => 2,
-          'title' => 'Food Bank Volunteer',
-          'description' => 'Assist in sorting and distributing food.',
-          'type' => 'Recurring',
-          'organization' => 'Helping Hands',
-          'email' => 'volunteer@helpinghands.org',
-          'location' => 'Downtown Food Bank',
-          'hours' => '3',
-          'skills_required' => 'Organization'
-      ],
-      (object)[
-          'id' => 3,
-          'title' => 'Tutoring Children',
-          'description' => 'Provide tutoring for elementary school children.',
-          'type' => 'Seasonal',
-          'organization' => 'Education First',
-          'email' => 'info@educationfirst.org',
-          'location' => 'Local Library',
-          'hours' => '2',
-          'skills_required' => 'Teaching'
-      ],
-      (object)[
-          'id' => 4,
-          'title' => 'Animal Shelter Helper',
-          'description' => 'Help take care of animals at the shelter.',
-          'type' => 'Recurring',
-          'organization' => 'Animal Care',
-          'email' => 'support@animalcare.org',
-          'location' => 'City Animal Shelter',
-          'hours' => '5',
-          'skills_required' => 'Animal Care'
-      ],
-      (object)[
-          'id' => 5,
-          'title' => 'Event Organizer',
-          'description' => 'Assist in organizing community events.',
-          'type' => 'One-time',
-          'organization' => 'Community Builders',
-          'email' => 'events@communitybuilders.org',
-          'location' => 'Community Center',
-          'hours' => '6',
-          'skills_required' => 'Event Planning, communication, fundraising'
+         'id' => 5,
+         'title' => 'Event Organizer',
+         'description' => 'Assist in organizing community events.',
+         'type' => 'One-time',
+         'organization' => 'Community Builders',
+         'email' => 'events@communitybuilders.org',
+         'location' => 'Community Center',
+         'hours' => '6',
+         'skills_required' => 'Event Planning, communication, fundraising'
       ]
-  ];
+   ];
 
    ?>
       <div class="wrap">
@@ -122,8 +89,9 @@ function admin_page_html()
          <div class="postbox">
             <div class="inside">
                <h2 >Create Volunteer Opportunity</h2>
+               <p>POST_ARRAY: <?php var_dump($_POST) ?> </p>
                <form method="post">
-                  <table class="form-table">
+                  <table class="form-table" action="<?php echo admin_url('admin.php?page=volunteer/volunteer-opportunity-plugin'); ?>">
                      <tr>
                         <th scope="row"><label for="title">Title (Position)</label></th>
                         <td><input name="title" type="text" id="title" value="" class="regular-text" required></td>
