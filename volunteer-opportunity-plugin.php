@@ -9,7 +9,12 @@
 */
 
 
-
+/**
+ * Activates the Volunteer Opportunity Plugin.
+ *
+ * This function creates the `volunteer_opportunities` table in the WordPress database
+ * and inserts some initial data into the table.
+ */
 function plugin_activate()
 {
    global $wpdb;
@@ -26,7 +31,7 @@ function plugin_activate()
          skills_required text
    );");
 
-   // Insert some data
+   // Insert some test data
    $wpdb->insert('volunteer_opportunities', [
       'position' => 'Community Clean-Up',
       'organization' => 'Green Earth',
@@ -50,6 +55,9 @@ function plugin_activate()
    ]);
 }
 
+/**
+ * Deactivates the plugin by truncating the volunteer_opportunities table.
+ */
 function plugin_deactivate()
 {
    global $wpdb;
@@ -58,6 +66,9 @@ function plugin_deactivate()
 }
 
 
+/**
+ * Uninstall function for the Volunteer Opportunity Plugin.
+ */
 function plugin_uninstall()
 {
    global $wpdb;
@@ -365,8 +376,12 @@ function admin_page()
   );
 }
 
-// Add Shortcode
-// ref: https://developer.wordpress.org/reference/functions/shortcode_atts/
+
+/**
+ * Shortcode handler for displaying volunteer opportunities.
+ * Example usage: [volunteer-opportunity hours="10" type="education"]
+ * Ref: https://developer.wordpress.org/reference/functions/shortcode_atts/
+ */
 function volunteer_shortcode($atts = [], $content = NULL)
 {
    global $wpdb;
@@ -377,7 +392,7 @@ function volunteer_shortcode($atts = [], $content = NULL)
    $atts = shortcode_atts([
       'hours' => NULL,
       'type' => NULL,
-   ], $atts, 'volunteer');
+   ], $atts, 'volunteer-opportunity');
 
    // Add conditions to the query based on attributes
    $conditions = [];
@@ -438,7 +453,6 @@ function volunteer_shortcode($atts = [], $content = NULL)
    $output .= '</table>';
    
    return $output;
-   
 }
 
 
