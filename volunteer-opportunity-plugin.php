@@ -366,14 +366,24 @@ function admin_page()
 }
 
 // Add Shortcode
-function shortcode($atts = [], $content = NULL)
+// ref: https://developer.wordpress.org/reference/functions/shortcode_atts/
+function volunteer_shortcode($atts = [], $content = NULL)
 {
+   global $wpdb;
+   $table_name = 'volunteer_opportunities';
+   $query = "SELECT * FROM $table_name";
+   
+   // Parse shortcode attributes
+   $atts = shortcode_atts([
+      'hours' => NULL,
+      'type' => NULL,
+   ], $atts, 'volunteer');
 
 }
 
 
 // Add Shortcode
-add_shortcode("add", "shortcode");
+add_shortcode("volunteer-opportunity", "volunteer_shortcode");
 
 // Add Admin Page
 add_action("admin_menu", "admin_page");
