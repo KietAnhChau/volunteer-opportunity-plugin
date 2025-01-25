@@ -54,8 +54,8 @@ function admin_page_html()
 {
    global $wpdb;
 
-   // Create Volunteer Opportunity
    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      // Create Volunteer Opportunity
       if (isset($_POST['create_opportunity'])) {
          $title = sanitize_text_field($_POST['title']);
          $organization = sanitize_text_field($_POST['organization']);
@@ -80,27 +80,55 @@ function admin_page_html()
                ]
             );
 
-            echo '<div id="success-message"><p>Volunteer opportunity created successfully.</p></div>';
+            echo '<div id="create-success-message"><p>Volunteer opportunity created successfully.</p></div>';
             echo '<script>
                setTimeout(function() {
-                  var message = document.getElementById("success-message");
-                  if (message) {
-                  message.style.display = "none";
-                  }
+                 var message = document.getElementById("create-success-message");
+                 if (message) {
+                 message.style.display = "none";
+                 }
                }, 5000);
             </script>';
-         } else {
-            echo '<div id="error-message" ><p>Please fill in all fields.</p></div>';
+          } else {
+            echo '<div id="create-error-message"><p>Please fill in all fields.</p></div>';
             echo '<script>
                setTimeout(function() {
-                  var message = document.getElementById("error-message");
-                  if (message) {
-                  message.style.display = "none";
-                  }
+                 var message = document.getElementById("create-error-message");
+                 if (message) {
+                 message.style.display = "none";
+                 }
                }, 5000);
             </script>';
-         }
+          }
       }
+
+      // Delete Volunteer Opportunity
+      if (isset($_POST['delete_opportunity'])) {
+         // Validate the id
+         $id = intval($_POST['id']);
+
+         // Check if the opportunity exists
+         $opportunity = $wpdb->get_row($wpdb->prepare("SELECT * FROM volunteer_opportunities WHERE id = %d", $id));
+
+         // Delete the opportunity
+          if ($opportunity) {
+            $wpdb->delete('volunteer_opportunities', ['id' => $id]);
+            echo '<div id="delete-success-message"><p>Volunteer opportunity deleted successfully.</p></div>';
+          } else {
+            echo '<div id="delete-error-message"><p>Volunteer opportunity not found.</p></div>';
+          }
+          echo '<script>
+            setTimeout(function() {
+               var message = document.getElementById("delete-success-message") || document.getElementById("delete-error-message");
+               if (message) {
+                 message.style.display = "none";
+               }
+            }, 5000);
+          </script>';
+      }
+
+      // Edit Volunteer Opportunity
+
    }
 
    // $opportunities = $wpdb->get_results("SELECT * FROM volunteer_opportunities");
@@ -284,7 +312,7 @@ function shortcode($atts = [], $content = NULL)
 
 
 // Add Shortcode
-add_shortcode("add", "wporg_shortcode");
+add_shortcode("add", "shortcode");
 
 // Add Admin Page
 add_action("admin_menu", "admin_page");
