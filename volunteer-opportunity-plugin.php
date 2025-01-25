@@ -25,6 +25,29 @@ function plugin_activate()
          hours int,
          skills_required text
    );");
+
+   // Insert some data
+   $wpdb->insert('volunteer_opportunities', [
+      'position' => 'Community Clean-Up',
+      'organization' => 'Green Earth',
+      'type' => 'One-time',
+      'email' => 'contact@greenearth.org',
+      'description' => 'Help clean up the local park.',
+      'location' => 'Central Park',
+      'hours' => 4,
+      'skills_required' => 'None'
+   ]);
+
+   $wpdb->insert('volunteer_opportunities', [
+      'position' => 'Event Organizer',
+      'organization' => 'Community Builders',
+      'type' => 'One-time',
+      'email' => 'events@communitybuilders.org',
+      'description' => 'Assist in organizing community events.',
+      'location' => 'Community Center',
+      'hours' => 6,
+      'skills_required' => 'Event Planning, communication, fundraising'
+   ]);
 }
 
 function plugin_deactivate()
@@ -111,51 +134,38 @@ function admin_page_html()
          $opportunity = $wpdb->get_row($wpdb->prepare("SELECT * FROM volunteer_opportunities WHERE id = %d", $id));
 
          // Delete the opportunity
-          if ($opportunity) {
+         if ($opportunity) {
             $wpdb->delete('volunteer_opportunities', ['id' => $id]);
             echo '<div id="delete-success-message"><p>Volunteer opportunity deleted successfully.</p></div>';
-          } else {
+         } else {
             echo '<div id="delete-error-message"><p>Volunteer opportunity not found.</p></div>';
-          }
-          echo '<script>
-            setTimeout(function() {
-               var message = document.getElementById("delete-success-message") || document.getElementById("delete-error-message");
-               if (message) {
-                 message.style.display = "none";
-               }
-            }, 5000);
-          </script>';
+         }
+            echo '<script>
+               setTimeout(function() {
+                  var message = document.getElementById("delete-success-message") || document.getElementById("delete-error-message");
+                  if (message) {
+                     message.style.display = "none";
+                  }
+               }, 5000);
+            </script>';
       }
 
       // Edit Volunteer Opportunity
+      if (isset($_POST['edit_opportunity'])) {
+         $id = intval($_POST['id']);
+         $opportunity = $wpdb->get_row($wpdb->prepare("SELECT * FROM volunteer_opportunities WHERE id = %d", $id));
+
+         if ($opportunity) {
+            $edit = true;
+         }
+      }
 
    }
 
-   // $opportunities = $wpdb->get_results("SELECT * FROM volunteer_opportunities");
-   $opportunities = [
-      (object)[
-         'id' => 1,
-         'title' => 'Community Clean-Up',
-         'description' => 'Help clean up the local park.',
-         'type' => 'One-time',
-         'organization' => 'Green Earth',
-         'email' => 'contact@greenearth.org',
-         'location' => 'Central Park',
-         'hours' => '4',
-         'skills_required' => 'None'
-      ], 
-      (object)[
-         'id' => 5,
-         'title' => 'Event Organizer',
-         'description' => 'Assist in organizing community events.',
-         'type' => 'One-time',
-         'organization' => 'Community Builders',
-         'email' => 'events@communitybuilders.org',
-         'location' => 'Community Center',
-         'hours' => '6',
-         'skills_required' => 'Event Planning, communication, fundraising'
-      ]
-   ];
+   $opportunities = $wpdb->get_results("SELECT * FROM volunteer_opportunities");
+
+   // Flag
+   $edit = false;
 
    ?>
       <div class="wrap">
@@ -165,58 +175,60 @@ function admin_page_html()
          <!-- Create Volunteer Opportunity -->
          <div class="postbox">
             <div class="inside">
-               <h2 >Create Volunteer Opportunity</h2>
+               <h2><?php echo esc_attr($opportunity) ?></h2>
+               <h2><?php echo $edit ? 'Edit' : 'Create'; ?> Volunteer Opportunity</h2>
                <form method="post">
+                  <input type="hidden" name="id" value="<?php echo $edit ? esc_attr($opportunity->id) : ''; ?>">
                   <table class="form-table" action="<?php echo admin_url('admin.php?page=volunteer/volunteer-opportunity-plugin'); ?>">
                      <tr>
                         <th scope="row"><label for="title">Title (Position)</label></th>
-                        <td><input name="title" type="text" id="title" value="" class="regular-text" required></td>
+                        <td><input name="title" type="text" id="title" value="<?php echo $edit ? esc_attr($opportunity->position) : ''; ?>" class="regular-text" required></td>
                      </tr>
 
                      <tr>
                         <th scope="row"><label for="organization">Organization</label></th>
-                        <td><input name="organization" type="text" id="organization" value="" class="regular-text" required></td>
+                        <td><input name="organization" type="text" id="organization" value="<?php echo $edit ? esc_attr($opportunity->organization) : ''; ?>" class="regular-text" required></td>
                      </tr>
 
                      <tr>
                         <th scope="row"><label for="description">Description</label></th>
-                        <td><textarea name="description" id="description" class="large-text" required></textarea></td>
+                        <td><textarea name="description" id="description" class="large-text" required><?php echo $edit ? esc_textarea($opportunity->description) : ''; ?></textarea></td>
                      </tr>
 
                      <tr>
                         <th scope="row"><label for="type">Type</label></th>
                         <td>
                            <select name="type" id="type" required>
-                           <option selected value="one-time">One-time</option>
-                           <option value="recurring">Recurring</option>
-                           <option value="seasonal">Seasonal</option>
+                              <option value="one-time" <?php echo $edit && $opportunity->type == 'one-time' ? 'selected' : ''; ?>>One-time</option>
+                              <option value="recurring" <?php echo $edit && $opportunity->type == 'recurring' ? 'selected' : ''; ?>>Recurring</option>
+                              <option value="seasonal" <?php echo $edit && $opportunity->type == 'seasonal' ? 'selected' : ''; ?>>Seasonal</option>
                            </select>
                         </td>
                      </tr>
 
                      <tr>
                         <th scope="row"><label for="email">E-mail</label></th>
-                        <td><input name="email" type="email" id="email" value="" class="regular-text" required></td>
+                        <td><input name="email" type="email" id="email" value="<?php echo $edit ? esc_attr($opportunity->email) : ''; ?>" class="regular-text" required></td>
                      </tr>
                      
                      <tr>
                         <th scope="row"><label for="location">Location</label></th>
-                        <td><input name="location" type="text" id="location" value="" class="regular-text" required></td>
+                        <td><input name="location" type="text" id="location" value="<?php echo $edit ? esc_attr($opportunity->location) : ''; ?>" class="regular-text" required></td>
                      </tr>
 
                      <tr>
                         <th scope="row"><label for="hours">Hours</label></th>
-                        <td><input name="hours" type="number" id="hours" value="" class="regular-text" required></td>
+                        <td><input name="hours" type="number" id="hours" value="<?php echo $edit ? esc_attr($opportunity->hours) : ''; ?>" class="regular-text" required></td>
                      </tr>
 
                      <tr>
                         <th scope="row"><label for="skills_required">Skills Required</label></th>
-                        <td><input name="skills_required" type="text" id="skills_required" value="" class="regular-text" required></td>
+                        <td><input name="skills_required" type="text" id="skills_required" value="<?php echo $edit ? esc_attr($opportunity->skills_required) : ''; ?>" class="regular-text" required></td>
                      </tr>
                   </table>
 
                   <p class="submit">
-                     <input type="submit" name="create_opportunity" id="create_opportunity" class="button button-primary" value="Create">
+                     <input type="submit" name="<?php echo $edit ? 'update_opportunity' : 'create_opportunity'; ?>" id="<?php echo $edit ? 'update_opportunity' : 'create_opportunity'; ?>" class="button button-primary" value="<?php echo $edit ? 'Update' : 'Create'; ?>">
                   </p>
                </form>
             </div>
@@ -246,7 +258,7 @@ function admin_page_html()
                      <?php foreach ($opportunities as $opportunity) : ?>
                         <tr>
                            <td><?php echo esc_html($opportunity->id); ?></td>
-                           <td><?php echo esc_html($opportunity->title); ?></td>
+                           <td><?php echo esc_html($opportunity->position); ?></td>
                            <td><?php echo esc_html($opportunity->description); ?></td>
                            <td><?php echo esc_html($opportunity->type); ?></td>
                            <td><?php echo esc_html($opportunity->organization); ?></td>
