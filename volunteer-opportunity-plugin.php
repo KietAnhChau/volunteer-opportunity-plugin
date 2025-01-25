@@ -51,11 +51,74 @@ function plugin_uninstall()
  */
 function admin_page_html()
 {
+   global $wpdb;
+
+   // $opportunities = $wpdb->get_results("SELECT * FROM volunteer_opportunities");
+
+   $opportunities = [
+      (object)[
+          'id' => 1,
+          'title' => 'Community Clean-Up',
+          'description' => 'Help clean up the local park.',
+          'type' => 'One-time',
+          'organization' => 'Green Earth',
+          'email' => 'contact@greenearth.org',
+          'location' => 'Central Park',
+          'hours' => '4',
+          'skills_required' => 'None'
+      ],
+      (object)[
+          'id' => 2,
+          'title' => 'Food Bank Volunteer',
+          'description' => 'Assist in sorting and distributing food.',
+          'type' => 'Recurring',
+          'organization' => 'Helping Hands',
+          'email' => 'volunteer@helpinghands.org',
+          'location' => 'Downtown Food Bank',
+          'hours' => '3',
+          'skills_required' => 'Organization'
+      ],
+      (object)[
+          'id' => 3,
+          'title' => 'Tutoring Children',
+          'description' => 'Provide tutoring for elementary school children.',
+          'type' => 'Seasonal',
+          'organization' => 'Education First',
+          'email' => 'info@educationfirst.org',
+          'location' => 'Local Library',
+          'hours' => '2',
+          'skills_required' => 'Teaching'
+      ],
+      (object)[
+          'id' => 4,
+          'title' => 'Animal Shelter Helper',
+          'description' => 'Help take care of animals at the shelter.',
+          'type' => 'Recurring',
+          'organization' => 'Animal Care',
+          'email' => 'support@animalcare.org',
+          'location' => 'City Animal Shelter',
+          'hours' => '5',
+          'skills_required' => 'Animal Care'
+      ],
+      (object)[
+          'id' => 5,
+          'title' => 'Event Organizer',
+          'description' => 'Assist in organizing community events.',
+          'type' => 'One-time',
+          'organization' => 'Community Builders',
+          'email' => 'events@communitybuilders.org',
+          'location' => 'Community Center',
+          'hours' => '6',
+          'skills_required' => 'Event Planning, communication, fundraising'
+      ]
+  ];
+
    ?>
       <div class="wrap">
          <h1 class="wp-heading-inline"><?php echo esc_html(get_admin_page_title()) ?></h1>
          <hr class="wp-header-end">
 
+         <!-- Create Volunteer Opportunity -->
          <div class="postbox">
             <div class="inside">
                <h2 >Create Volunteer Opportunity</h2>
@@ -107,6 +170,55 @@ function admin_page_html()
                      <input type="submit" name="create_opportunity" id="create_opportunity" class="button button-primary" value="Create">
                   </p>
                </form>
+            </div>
+         </div>
+
+         <!-- Display existing volunteer opportunities -->
+         <div class="postbox">
+            <div class="inside">
+               <h2>Existing Volunteer Opportunities</h2>
+               <table class="wp-list-table widefat fixed striped">
+                  <thead>
+                     <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Type</th>
+                        <th>Organization</th>
+                        <th>E-mail</th>
+                        <th>Location</th>
+                        <th>Hours</th>
+                        <th>Skills Required</th>
+                        <th>Actions</th>
+                     </tr>
+                  </thead>
+
+                  <tbody>
+                     <?php foreach ($opportunities as $opportunity) : ?>
+                        <tr>
+                           <td><?php echo esc_html($opportunity->id); ?></td>
+                           <td><?php echo esc_html($opportunity->title); ?></td>
+                           <td><?php echo esc_html($opportunity->description); ?></td>
+                           <td><?php echo esc_html($opportunity->type); ?></td>
+                           <td><?php echo esc_html($opportunity->organization); ?></td>
+                           <td><?php echo esc_html($opportunity->email); ?></td>
+                           <td><?php echo esc_html($opportunity->location); ?></td>
+                           <td><?php echo esc_html($opportunity->hours); ?></td>
+                           <td><?php echo esc_html($opportunity->skills_required); ?></td>
+                           <td>
+                              <form method="post" style="display:inline;">
+                                 <input type="hidden" name="id" value="<?php echo esc_attr($opportunity->id); ?>">
+                                 <input type="submit" name="delete_opportunity" class="button button-secondary" value="Delete">
+                              </form>
+                              <form method="post" style="display:inline;">
+                                 <input type="hidden" name="id" value="<?php echo esc_attr($opportunity->id); ?>">
+                                 <input type="submit" name="edit_opportunity" class="button button-primary" value="Edit">
+                              </form>
+                           </td>
+                        </tr>
+                     <?php endforeach; ?>
+                  </tbody>
+               </table>
             </div>
          </div>
       </div>
