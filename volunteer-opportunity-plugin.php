@@ -379,6 +379,24 @@ function volunteer_shortcode($atts = [], $content = NULL)
       'type' => NULL,
    ], $atts, 'volunteer');
 
+   // Add conditions to the query based on attributes
+   $conditions = [];
+
+   if (!is_null($atts['hours'])) {
+      $conditions[] = $wpdb->prepare("hours < %d", $atts['hours']);
+   }
+
+   if (!is_null($atts['type'])) {
+      $conditions[] = $wpdb->prepare("type = %s", $atts['type']);
+   }
+   
+   if (!empty($conditions)) {
+      $query .= ' WHERE ' . implode(' AND ', $conditions);
+   }
+   
+   $opportunities = $wpdb->get_results($query);
+     
+
 }
 
 
