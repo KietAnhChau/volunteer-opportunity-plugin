@@ -53,52 +53,63 @@ function admin_page_html()
 {
    ?>
       <div class="wrap">
-         <h2><?php echo esc_html(get_admin_page_title()) ?></h2> 
+         <h1 class="wp-heading-inline"><?php echo esc_html(get_admin_page_title()) ?></h1>
+         <hr class="wp-header-end">
 
-         <h3>Create Volunteer Opportunity</h3>
-         
-         <form method="post">
-            <table class="form-table">
-                 <tr>
-                   <th scope="row"><label for="title">Title (Position)</label></th>
-                   <td><input name="title" type="text" id="title" value="" class="regular-text" required></td>
-                 </tr>
-                 <tr>
-                   <th scope="row"><label for="description">Description</label></th>
-                   <td><textarea name="description" id="description" class="large-text" required></textarea></td>
-                 </tr>
-                 <tr>
-                   <th scope="row"><label for="type">Type</label></th>
-                   <td>
-                     <select name="type" id="type" required>
-                        <option value="one-time">One-time</option>
-                        <option value="recurring">Recurring</option>
-                        <option value="seasonal">Seasonal</option>
-                     </select>
-                   </td>
-                 </tr>
-                 <tr>
-                   <th scope="row"><label for="email">E-mail</label></th>
-                   <td><input name="email" type="email" id="email" value="" class="regular-text" required></td>
-                 </tr>
-                 <tr>
-                   <th scope="row"><label for="location">Location</label></th>
-                   <td><input name="location" type="text" id="location" value="" class="regular-text" required></td>
-                 </tr>
-                 <tr>
-                   <th scope="row"><label for="hours">Hours</label></th>
-                   <td><input name="hours" type="number" id="hours" value="" class="regular-text" required></td>
-                 </tr>
-                 <tr>
-                   <th scope="row"><label for="skills_required">Skills Required</label></th>
-                   <td><input name="skills_required" type="text" id="skills_required" value="" class="regular-text" required></td>
-                 </tr>
-            </table>
+         <div class="postbox">
+            <div class="inside">
+               <h2 >Create Volunteer Opportunity</h2>
+               <form method="post">
+                  <table class="form-table">
+                     <tr>
+                        <th scope="row"><label for="title">Title (Position)</label></th>
+                        <td><input name="title" type="text" id="title" value="" class="regular-text" required></td>
+                     </tr>
 
-         </form>
+                     <tr>
+                        <th scope="row"><label for="description">Description</label></th>
+                        <td><textarea name="description" id="description" class="large-text" required></textarea></td>
+                     </tr>
 
+                     <tr>
+                        <th scope="row"><label for="type">Type</label></th>
+                        <td>
+                           <select name="type" id="type" required>
+                           <option selected value="one-time">One-time</option>
+                           <option value="recurring">Recurring</option>
+                           <option value="seasonal">Seasonal</option>
+                           </select>
+                        </td>
+                     </tr>
+
+                     <tr>
+                        <th scope="row"><label for="email">E-mail</label></th>
+                        <td><input name="email" type="email" id="email" value="" class="regular-text" required></td>
+                     </tr>
+                     
+                     <tr>
+                        <th scope="row"><label for="location">Location</label></th>
+                        <td><input name="location" type="text" id="location" value="" class="regular-text" required></td>
+                     </tr>
+
+                     <tr>
+                        <th scope="row"><label for="hours">Hours</label></th>
+                        <td><input name="hours" type="number" id="hours" value="" class="regular-text" required></td>
+                     </tr>
+
+                     <tr>
+                        <th scope="row"><label for="skills_required">Skills Required</label></th>
+                        <td><input name="skills_required" type="text" id="skills_required" value="" class="regular-text" required></td>
+                     </tr>
+                  </table>
+
+                  <p class="submit">
+                     <input type="submit" name="create_opportunity" id="create_opportunity" class="button button-primary" value="Create">
+                  </p>
+               </form>
+            </div>
+         </div>
       </div>
-
    <?php
 }
 
