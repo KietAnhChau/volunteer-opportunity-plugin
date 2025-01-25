@@ -164,6 +164,55 @@ function admin_page_html()
          }
       }
 
+      // Update Volunteer Opportunity
+      if (isset($_POST["update_opportunity"])) {
+         $id = intval($_POST['id']);
+         $title = sanitize_text_field($_POST['title']);
+         $organization = sanitize_text_field($_POST['organization']);
+         $description = sanitize_textarea_field($_POST['description']);
+         $type = sanitize_text_field($_POST['type']);
+         $email = sanitize_email($_POST['email']);
+         $location = sanitize_text_field($_POST['location']);
+         $hours = intval($_POST['hours']);
+         $skills_required = sanitize_text_field($_POST['skills_required']);
+
+         if (!empty($title) && !empty($organization) && !empty($description) && !empty($type) && !empty($email) && !empty($location) && !empty($hours) && !empty($skills_required)) {
+            $wpdb->update('volunteer_opportunities',
+               [
+                  'position' => $title,
+                  'organization' => $organization,
+                  'description' => $description,
+                  'type' => $type,
+                  'email' => $email,
+                  'location' => $location,
+                  'hours' => $hours,
+                  'skills_required' => $skills_required
+               ],
+               ['id' => $id]
+            );
+
+            echo '<div id="update-success-message"><p>Volunteer opportunity updated successfully.</p></div>';
+            echo '<script>
+               setTimeout(function() {
+                 var message = document.getElementById("update-success-message");
+                 if (message) {
+                 message.style.display = "none";
+                 }
+               }, 5000);
+            </script>';
+         } else {
+            echo '<div id="update-error-message"><p>Please fill in all fields.</p></div>';
+            echo '<script>
+               setTimeout(function() {
+                 var message = document.getElementById("update-error-message");
+                 if (message) {
+                 message.style.display = "none";
+                 }
+               }, 5000);
+            </script>';
+         }
+      }
+
    }
 
    $opportunities = $wpdb->get_results("SELECT * FROM volunteer_opportunities");
