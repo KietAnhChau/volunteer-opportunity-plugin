@@ -77,6 +77,9 @@ function admin_page_html()
 {
    global $wpdb;
 
+   // Flag
+   $edit = false;
+
    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       // Create Volunteer Opportunity
       if (isset($_POST['create_opportunity'])) {
@@ -150,9 +153,10 @@ function admin_page_html()
             </script>';
       }
 
-      // Edit Volunteer Opportunity
-      if (isset($_POST['edit_opportunity'])) {
+      // Edit Volunteer Opportunity 
+      if (isset($_POST['edit_opportunity_setup'])) {
          $id = intval($_POST['id']);
+
          $opportunity = $wpdb->get_row($wpdb->prepare("SELECT * FROM volunteer_opportunities WHERE id = %d", $id));
 
          if ($opportunity) {
@@ -164,9 +168,6 @@ function admin_page_html()
 
    $opportunities = $wpdb->get_results("SELECT * FROM volunteer_opportunities");
 
-   // Flag
-   $edit = false;
-
    ?>
       <div class="wrap">
          <h1 class="wp-heading-inline"><?php echo esc_html(get_admin_page_title()) ?></h1>
@@ -175,7 +176,6 @@ function admin_page_html()
          <!-- Create Volunteer Opportunity -->
          <div class="postbox">
             <div class="inside">
-               <h2><?php echo esc_attr($opportunity) ?></h2>
                <h2><?php echo $edit ? 'Edit' : 'Create'; ?> Volunteer Opportunity</h2>
                <form method="post">
                   <input type="hidden" name="id" value="<?php echo $edit ? esc_attr($opportunity->id) : ''; ?>">
@@ -273,7 +273,7 @@ function admin_page_html()
                               </form>
                               <form method="post" style="display:inline;">
                                  <input type="hidden" name="id" value="<?php echo esc_attr($opportunity->id); ?>">
-                                 <input type="submit" name="edit_opportunity" class="button button-primary" value="Edit">
+                                 <input type="submit" name="edit_opportunity_setup" class="button button-primary" value="Edit">
                               </form>
                            </td>
                         </tr>
