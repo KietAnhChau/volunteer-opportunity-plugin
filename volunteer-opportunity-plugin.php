@@ -47,14 +47,63 @@ function plugin_uninstall()
  * Renders the HTML for the admin page to create a volunteer opportunity.
  *
  * ref: https://dotorgstyleguide.wordpress.com/
+ * ref: https://developer.wordpress.org/reference/functions/
  * @return void
  */
 function admin_page_html()
 {
    global $wpdb;
 
-   // $opportunities = $wpdb->get_results("SELECT * FROM volunteer_opportunities");
+   // Create Volunteer Opportunity
+   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      if (isset($_POST['create_opportunity'])) {
+         $title = sanitize_text_field($_POST['title']);
+         $organization = sanitize_text_field($_POST['organization']);
+         $description = sanitize_textarea_field($_POST['description']);
+         $type = sanitize_text_field($_POST['type']);
+         $email = sanitize_email($_POST['email']);
+         $location = sanitize_text_field($_POST['location']);
+         $hours = intval($_POST['hours']);
+         $skills_required = sanitize_text_field($_POST['skills_required']);
 
+         if (!empty($title) && !empty($organization) && !empty($description) && !empty($type) && !empty($email) && !empty($location) && !empty($hours) && !empty($skills_required)) {
+            $wpdb->insert('volunteer_opportunities',
+               [
+                  'position' => $title,
+                  'organization' => $organization,
+                  'description' => $description,
+                  'type' => $type,
+                  'email' => $email,
+                  'location' => $location,
+                  'hours' => $hours,
+                  'skills_required' => $skills_required
+               ]
+            );
+
+            echo '<div id="success-message"><p>Volunteer opportunity created successfully.</p></div>';
+            echo '<script>
+               setTimeout(function() {
+                  var message = document.getElementById("success-message");
+                  if (message) {
+                  message.style.display = "none";
+                  }
+               }, 5000);
+            </script>';
+         } else {
+            echo '<div id="error-message" ><p>Please fill in all fields.</p></div>';
+            echo '<script>
+               setTimeout(function() {
+                  var message = document.getElementById("error-message");
+                  if (message) {
+                  message.style.display = "none";
+                  }
+               }, 5000);
+            </script>';
+         }
+      }
+   }
+
+   // $opportunities = $wpdb->get_results("SELECT * FROM volunteer_opportunities");
    $opportunities = [
       (object)[
          'id' => 1,
@@ -89,12 +138,16 @@ function admin_page_html()
          <div class="postbox">
             <div class="inside">
                <h2 >Create Volunteer Opportunity</h2>
-               <p>POST_ARRAY: <?php var_dump($_POST) ?> </p>
                <form method="post">
                   <table class="form-table" action="<?php echo admin_url('admin.php?page=volunteer/volunteer-opportunity-plugin'); ?>">
                      <tr>
                         <th scope="row"><label for="title">Title (Position)</label></th>
                         <td><input name="title" type="text" id="title" value="" class="regular-text" required></td>
+                     </tr>
+
+                     <tr>
+                        <th scope="row"><label for="organization">Organization</label></th>
+                        <td><input name="organization" type="text" id="organization" value="" class="regular-text" required></td>
                      </tr>
 
                      <tr>
@@ -241,6 +294,5 @@ add_action("admin_menu", "admin_page");
 register_activation_hook(__FILE__, "plugin_activate");
 register_deactivation_hook(__FILE__, "plugin_deactivate");
 register_uninstall_hook(__FILE__, "plugin_uninstall");
-
 
 ?>
