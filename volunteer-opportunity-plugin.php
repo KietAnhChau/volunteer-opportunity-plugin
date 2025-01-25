@@ -389,14 +389,56 @@ function volunteer_shortcode($atts = [], $content = NULL)
    if (!is_null($atts['type'])) {
       $conditions[] = $wpdb->prepare("type = %s", $atts['type']);
    }
-   
+
    if (!empty($conditions)) {
       $query .= ' WHERE ' . implode(' AND ', $conditions);
    }
    
    $opportunities = $wpdb->get_results($query);
-     
 
+   // Start building the HTML table
+   $output = '<table style="width:100%; border-collapse: collapse;">';
+   $output .= '<tr>';
+   $output .= '<th style="border: 1px solid #ddd; padding: 8px;">ID</th>';
+   $output .= '<th style="border: 1px solid #ddd; padding: 8px;">Title</th>';
+   $output .= '<th style="border: 1px solid #ddd; padding: 8px;">Description</th>';
+   $output .= '<th style="border: 1px solid #ddd; padding: 8px;">Type</th>';
+   $output .= '<th style="border: 1px solid #ddd; padding: 8px;">Organization</th>';
+   $output .= '<th style="border: 1px solid #ddd; padding: 8px;">E-mail</th>';
+   $output .= '<th style="border: 1px solid #ddd; padding: 8px;">Location</th>';
+   $output .= '<th style="border: 1px solid #ddd; padding: 8px;">Hours</th>';
+   $output .= '<th style="border: 1px solid #ddd; padding: 8px;">Skills Required</th>';
+   $output .= '</tr>';
+   
+   foreach ($opportunities as $opportunity) {
+      $row_style = '';
+      if (is_null($atts['hours']) && is_null($atts['type'])) {
+         if ($opportunity->hours < 10) {
+            $row_style = 'background-color: #d4edda;';
+         } elseif ($opportunity->hours >= 10 && $opportunity->hours <= 100) {
+            $row_style = 'background-color: #fff3cd;';
+         } elseif ($opportunity->hours > 100) {
+            $row_style = 'background-color: #f8d7da;';
+         }
+      }
+
+      $output .= '<tr style="' . $row_style . '">';
+      $output .= '<td style="border: 1px solid #ddd; padding: 8px;">' . esc_html($opportunity->id) . '</td>';
+      $output .= '<td style="border: 1px solid #ddd; padding: 8px;">' . esc_html($opportunity->position) . '</td>';
+      $output .= '<td style="border: 1px solid #ddd; padding: 8px;">' . esc_html($opportunity->description) . '</td>';
+      $output .= '<td style="border: 1px solid #ddd; padding: 8px;">' . esc_html($opportunity->type) . '</td>';
+      $output .= '<td style="border: 1px solid #ddd; padding: 8px;">' . esc_html($opportunity->organization) . '</td>';
+      $output .= '<td style="border: 1px solid #ddd; padding: 8px;">' . esc_html($opportunity->email) . '</td>';
+      $output .= '<td style="border: 1px solid #ddd; padding: 8px;">' . esc_html($opportunity->location) . '</td>';
+      $output .= '<td style="border: 1px solid #ddd; padding: 8px;">' . esc_html($opportunity->hours) . '</td>';
+      $output .= '<td style="border: 1px solid #ddd; padding: 8px;">' . esc_html($opportunity->skills_required) . '</td>';
+      $output .= '</tr>';
+   }
+      
+   $output .= '</table>';
+   
+   return $output;
+   
 }
 
 
