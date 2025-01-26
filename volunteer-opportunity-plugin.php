@@ -53,6 +53,17 @@ function plugin_activate()
       'hours' => 6,
       'skills_required' => 'Event Planning, communication, fundraising'
    ]);
+
+   $wpdb->insert('volunteer_opportunities', [
+      'position' => 'Food Bank Assistant',
+      'organization' => 'Helping Hands',
+      'type' => 'Recurring',
+      'email' => 'volunteer@helpinghands.org',
+      'description' => 'Assist in organizing and distributing food at the local food bank.',
+      'location' => 'Downtown Food Bank',
+      'hours' => 8,
+      'skills_required' => 'Organization, communication'
+   ]);
 }
 
 /**
